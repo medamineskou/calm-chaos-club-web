@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Atelier Prive - Journal de Mohammed</title>
+    <meta
+      name="description"
+      content="Blog personnel premium pour partager idees, photos, articles, liens et notes mathematiques."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="./assets/style.css" />
+  </head>
+  <body>
+    <div class="ambient ambient-top"></div>
+    <div class="ambient ambient-bottom"></div>
+    <header class="site-header">
+      <div class="brand">
+        <p class="brand-mark">Atelier Prive</p>
+        <h1>Journal de Mohammed</h1>
+      </div>
+      <a class="header-share" href="https://github.com/medamineskou" target="_blank" rel="noreferrer">GitHub</a>
+    </header>
+    <main class="layout">
+      <aside class="panel filters-panel">
+        <h2>Explorer</h2>
+        <label class="field-label" for="searchInput">Recherche rapide</label>
+        <input id="searchInput" class="search-input" type="search" placeholder="Titre, tags, contenu..." />
+        <p class="field-label">Type de contenu</p>
+        <div id="typeFilters" class="chips"></div>
+        <p class="field-label">Tags</p>
+        <div id="tagFilters" class="chips"></div>
+        <button id="clearFiltersBtn" class="ghost-btn" type="button">Reinitialiser</button>
+      </aside>
+      <section class="panel content-panel">
+        <div id="listView">
+          <div class="section-top">
+            <h2>Mes partages</h2>
+            <p id="resultsMeta" class="meta-text"></p>
+          </div>
+          <div id="cardsContainer" class="cards-grid"></div>
+        </div>
+        <article id="detailView" class="detail-view hidden" aria-live="polite">
+          <button id="backBtn" class="ghost-btn back-btn" type="button">Retour aux partages</button>
+          <p id="detailMeta" class="meta-text"></p>
+          <h2 id="detailTitle"></h2>
+          <div id="detailTags" class="chips"></div>
+          <div id="detailContent" class="rich-content"></div>
+          <div class="detail-actions">
+            <button id="shareBtn" class="gold-btn" type="button">Partager cet article</button>
+            <a id="sourceLink" class="ghost-btn hidden" target="_blank" rel="noreferrer">Ouvrir la source</a>
+          </div>
+        </article>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <p>Heberge gratuitement sur GitHub Pages. Mise a jour en modifiant <code>assets/posts.js</code>.</p>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script src="./assets/posts.js"></script>
+    <script src="./assets/app.js"></script>
+  </body>
+</html>
