@@ -1,12 +1,15 @@
 const state = {
-  selectedType: "Tous",
-  selectedTag: "Tous",
-  query: ""
+  selectedTheme: "All",
+  selectedTag: "All",
+  query: "",
+  currentSlug: ""
 };
+
+const COMMENTS_KEY = "ccc_comments_v1";
 
 const el = {
   searchInput: document.getElementById("searchInput"),
-  typeFilters: document.getElementById("typeFilters"),
+  themeFilters: document.getElementById("themeFilters"),
   tagFilters: document.getElementById("tagFilters"),
   clearFiltersBtn: document.getElementById("clearFiltersBtn"),
   cardsContainer: document.getElementById("cardsContainer"),
@@ -21,34 +24,38 @@ const el = {
   shareBtn: document.getElementById("shareBtn"),
   sourceLink: document.getElementById("sourceLink"),
   backBtn: document.getElementById("backBtn"),
-  themeToggle: document.getElementById("themeToggle")
+  themeToggle: document.getElementById("themeToggle"),
+  commentsList: document.getElementById("commentsList"),
+  commentForm: document.getElementById("commentForm"),
+  commentName: document.getElementById("commentName"),
+  commentText: document.getElementById("commentText")
 };
 
 function uniqueValues(values) {
-  return ["Tous", ...new Set(values)].filter(Boolean);
+  return ["All", ...new Set(values)].filter(Boolean);
 }
 
-function activeTheme() {
-  return localStorage.getItem("ccc_theme") || "light";
+function activeThemeMode() {
+  return localStorage.getItem("ccc_theme_mode") || "light";
 }
 
-function applyTheme(theme) {
-  document.body.dataset.theme = theme;
-  localStorage.setItem("ccc_theme", theme);
-  el.themeToggle.textContent = theme === "dark" ? "Mode jour" : "Mode nuit";
+function applyThemeMode(mode) {
+  document.body.dataset.theme = mode;
+  localStorage.setItem("ccc_theme_mode", mode);
+  el.themeToggle.textContent = mode === "dark" ? "Light mode" : "Dark mode";
 }
 
-function toggleTheme() {
-  applyTheme(activeTheme() === "dark" ? "light" : "dark");
+function toggleThemeMode() {
+  applyThemeMode(activeThemeMode() === "dark" ? "light" : "dark");
 }
 
 function matchPost(post) {
   const q = state.query.trim().toLowerCase();
   const haystack = `${post.title} ${post.excerpt} ${post.tags.join(" ")} ${post.content}`.toLowerCase();
   const byQuery = !q || haystack.includes(q);
-  const byType = state.selectedType === "Tous" || post.type === state.selectedType;
-  const byTag = state.selectedTag === "Tous" || post.tags.includes(state.selectedTag);
-  return byQuery && byType && byTag;
+  const byTheme = state.selectedTheme === "All" || post.theme === state.selectedTheme;
+  const byTag = state.selectedTag === "All" || post.tags.includes(state.selectedTag);
+  return byQuery && byTheme && byTag;
 }
 
 function filteredPosts() {
@@ -65,12 +72,12 @@ function chip(label, active, onClick) {
 }
 
 function renderFilters() {
-  const types = uniqueValues(window.POSTS.map((p) => p.type));
+  const themes = uniqueValues(window.POSTS.map((p) => p.theme));
   const tags = uniqueValues(window.POSTS.flatMap((p) => p.tags));
-  el.typeFilters.replaceChildren(
-    ...types.map((type) =>
-      chip(type, state.selectedType === type, () => {
-        state.selectedType = type;
+  el.themeFilters.replaceChildren(
+    ...themes.map((theme) =>
+      chip(theme, state.selectedTheme === theme, () => {
+        state.selectedTheme = theme;
         renderList();
       })
     )
@@ -92,15 +99,15 @@ function postCard(post) {
     post.image ||
     "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80";
   node.innerHTML = `
-    <img class="feed-image" src="${safeImage}" alt="Image du post ${post.title}" loading="lazy" />
+    <img class="feed-image" src="${safeImage}" alt="Image for ${post.title}" loading="lazy" />
     <div class="feed-content">
-      <p class="feed-meta">${post.type} - ${formatDate(post.date)}</p>
+      <p class="feed-meta">${post.theme} - ${formatDate(post.date)}</p>
       <h3>${post.title}</h3>
       <p>${post.excerpt}</p>
       <div class="chips">${post.tags.map((tag) => `<span class="chip">${tag}</span>`).join("")}</div>
       <div class="feed-actions">
-        <button class="action-link js-read" type="button">Lire</button>
-        <button class="action-link js-share" type="button">Partager</button>
+        <button class="action-link js-read" type="button">Read</button>
+        <button class="action-link js-share" type="button">Share</button>
       </div>
     </div>
   `;
@@ -114,29 +121,25 @@ function renderList() {
   const posts = filteredPosts();
   el.resultsMeta.textContent = `${posts.length} post(s)`;
   if (!posts.length) {
-    el.cardsContainer.innerHTML =
-      "<p class='meta'>Aucun resultat pour cette recherche. Essaie un autre tag ou mot-cle.</p>";
+    el.cardsContainer.innerHTML = "<p class='meta'>No results for this query yet.</p>";
     return;
   }
   el.cardsContainer.replaceChildren(...posts.map(postCard));
 }
 
 function formatDate(value) {
-  return new Date(value).toLocaleDateString("fr-BE", {
+  return new Date(value).toLocaleDateString("en-US", {
     day: "2-digit",
     month: "short",
     year: "numeric"
   });
 }
 
-function renderMath(retries = 8) {
+function renderMath(retries = 10) {
   if (!window.renderMathInElement) {
-    if (retries > 0) {
-      window.setTimeout(() => renderMath(retries - 1), 120);
-    }
+    if (retries > 0) window.setTimeout(() => renderMath(retries - 1), 120);
     return;
   }
-
   window.renderMathInElement(el.detailContent, {
     delimiters: [
       { left: "$$", right: "$$", display: true },
@@ -148,19 +151,15 @@ function renderMath(retries = 8) {
 }
 
 function normalizeInlineMath(markdown) {
-  // Avoid delimiter conflicts by converting single-dollar inline math to \( ... \),
-  // while preserving block math in $$ ... $$ untouched.
   const blocks = [];
   const protectedMarkdown = markdown.replace(/\$\$[\s\S]*?\$\$/g, (m) => {
     const key = `@@MATH_BLOCK_${blocks.length}@@`;
     blocks.push(m);
     return key;
   });
-
   const converted = protectedMarkdown.replace(/(^|[^$])\$([^\n$]+?)\$/g, (full, prefix, expr) => {
     return `${prefix}\\(${expr.trim()}\\)`;
   });
-
   return converted.replace(/@@MATH_BLOCK_(\d+)@@/g, (_, idx) => blocks[Number(idx)]);
 }
 
@@ -168,18 +167,21 @@ function openPost(slug, pushHash) {
   const post = window.POSTS.find((item) => item.slug === slug);
   if (!post) return;
 
+  state.currentSlug = slug;
   el.listView.classList.add("hidden");
   el.detailView.classList.remove("hidden");
-  el.detailMeta.textContent = `${post.type} - ${formatDate(post.date)}`;
+  el.detailMeta.textContent = `${post.theme} - ${formatDate(post.date)}`;
   el.detailTitle.textContent = post.title;
   el.detailTags.innerHTML = post.tags.map((tag) => `<span class="chip">${tag}</span>`).join("");
+
   if (post.rawHtml) {
     el.detailContent.innerHTML = post.content;
   } else {
     const normalizedContent = normalizeInlineMath(post.content);
     el.detailContent.innerHTML = window.marked.parse(normalizedContent);
   }
-  el.detailContent.setAttribute("lang", post.lang || "fr");
+
+  el.detailContent.setAttribute("lang", post.lang || "en");
   el.detailContent.setAttribute("dir", post.dir || "ltr");
 
   if (post.image) {
@@ -197,6 +199,7 @@ function openPost(slug, pushHash) {
   }
 
   renderMath();
+  renderComments(slug);
   el.shareBtn.onclick = () => sharePost(slug);
   if (pushHash) window.location.hash = slug;
 }
@@ -204,6 +207,7 @@ function openPost(slug, pushHash) {
 function closePost() {
   el.detailView.classList.add("hidden");
   el.listView.classList.remove("hidden");
+  state.currentSlug = "";
   if (window.location.hash) history.replaceState(null, "", window.location.pathname);
 }
 
@@ -215,10 +219,74 @@ async function sharePost(slug) {
       return;
     }
     await navigator.clipboard.writeText(url);
-    alert("Lien copie.");
+    alert("Link copied.");
   } catch {
     // User cancelled share or browser blocked clipboard.
   }
+}
+
+function loadComments() {
+  try {
+    const raw = localStorage.getItem(COMMENTS_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+function saveComments(store) {
+  localStorage.setItem(COMMENTS_KEY, JSON.stringify(store));
+}
+
+function getPostComments(slug) {
+  const store = loadComments();
+  const list = Array.isArray(store[slug]) ? store[slug] : [];
+  return list.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+}
+
+function renderComments(slug) {
+  const comments = getPostComments(slug);
+  if (!comments.length) {
+    el.commentsList.innerHTML = "<p class='meta'>No comments yet. Be the first one.</p>";
+    return;
+  }
+
+  const nodes = comments.map((comment) => {
+    const item = document.createElement("article");
+    item.className = "comment-item";
+
+    const head = document.createElement("div");
+    head.className = "comment-head";
+    const name = document.createElement("strong");
+    name.textContent = comment.name || "Anonymous";
+    const time = document.createElement("span");
+    time.textContent = new Date(comment.createdAt).toLocaleString("en-US");
+    head.append(name, time);
+
+    const body = document.createElement("p");
+    body.className = "comment-body";
+    body.textContent = comment.text;
+
+    item.append(head, body);
+    return item;
+  });
+
+  el.commentsList.replaceChildren(...nodes);
+}
+
+function addComment(slug, name, text) {
+  const store = loadComments();
+  const list = Array.isArray(store[slug]) ? store[slug] : [];
+  list.push({
+    id: `${Date.now()}_${Math.random().toString(16).slice(2)}`,
+    name: name || "Anonymous",
+    text,
+    createdAt: new Date().toISOString()
+  });
+  store[slug] = list;
+  saveComments(store);
 }
 
 function initEvents() {
@@ -228,15 +296,26 @@ function initEvents() {
   });
 
   el.clearFiltersBtn.addEventListener("click", () => {
-    state.selectedType = "Tous";
-    state.selectedTag = "Tous";
+    state.selectedTheme = "All";
+    state.selectedTag = "All";
     state.query = "";
     el.searchInput.value = "";
     renderList();
   });
 
   el.backBtn.addEventListener("click", closePost);
-  el.themeToggle.addEventListener("click", toggleTheme);
+  el.themeToggle.addEventListener("click", toggleThemeMode);
+
+  el.commentForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!state.currentSlug) return;
+    const name = (el.commentName.value || "").trim();
+    const text = (el.commentText.value || "").trim();
+    if (!text) return;
+    addComment(state.currentSlug, name, text);
+    el.commentText.value = "";
+    renderComments(state.currentSlug);
+  });
 
   window.addEventListener("hashchange", () => {
     const slug = window.location.hash.replace("#", "");
@@ -249,7 +328,7 @@ function initEvents() {
 }
 
 function boot() {
-  applyTheme(activeTheme());
+  applyThemeMode(activeThemeMode());
   renderList();
   initEvents();
   const slug = window.location.hash.replace("#", "");

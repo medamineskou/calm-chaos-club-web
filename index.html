@@ -1,17 +1,17 @@
 <!doctype html>
-<html lang="fr">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Calm Chaos Club</title>
     <meta
       name="description"
-      content="Calm Chaos Club: espace perso pour partager idees, philo, math, culture, sport, photos et articles."
+      content="Calm Chaos Club is Mohammed Skoubani's personal knowledge space across actuarial science, machine learning, philosophy, culture, and more."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
     <link
@@ -26,10 +26,13 @@
       <div class="topbar-inner">
         <div class="brand-wrap">
           <p class="brand-mini">Calm Chaos Club</p>
-          <h1>Un feed pour penser, partager, archiver.</h1>
+          <h1>Ideas, models, culture, and field notes.</h1>
+          <p class="brand-sub">
+            A clean personal lab by Mohammed Skoubani.
+          </p>
         </div>
         <div class="topbar-actions">
-          <button id="themeToggle" class="btn ghost" type="button">Mode nuit</button>
+          <button id="themeToggle" class="btn ghost" type="button">Dark mode</button>
         </div>
       </div>
     </header>
@@ -37,53 +40,77 @@
     <main class="page">
       <aside class="sidebar">
         <section class="panel">
-          <h2>Explorer</h2>
-          <input id="searchInput" type="search" placeholder="Rechercher dans les posts..." />
-          <p class="label">Type</p>
-          <div id="typeFilters" class="chips"></div>
+          <h2>Discover</h2>
+          <input id="searchInput" type="search" placeholder="Search posts, tags, formulas..." />
+          <p class="label">Theme</p>
+          <div id="themeFilters" class="chips"></div>
           <p class="label">Tags</p>
           <div id="tagFilters" class="chips"></div>
-          <button id="clearFiltersBtn" class="btn ghost full" type="button">Reinitialiser les filtres</button>
+          <button id="clearFiltersBtn" class="btn ghost full" type="button">Clear filters</button>
         </section>
       </aside>
 
       <section class="feed-area">
+        <section class="panel intro-panel">
+          <h2>About Mohammed</h2>
+          <p>
+            I am Mohammed Skoubani, working at the intersection of actuarial thinking, data science,
+            and machine learning. I like combining mathematical rigor with practical decision-making:
+            from likelihood-based modeling and risk pricing to robust ML systems that can be explained
+            to both technical and business audiences.
+          </p>
+          <p>
+            Calm Chaos Club is my long-form notebook for ideas, proofs, implementation notes, philosophy,
+            and culture. The goal is simple: write clearly, think deeply, and leave useful traces.
+          </p>
+        </section>
+
         <section id="listView" class="panel">
           <div class="feed-head">
-            <h2>Fil des partages</h2>
+            <h2>Knowledge Feed</h2>
             <p id="resultsMeta"></p>
           </div>
           <div id="cardsContainer" class="feed-list"></div>
         </section>
 
         <article id="detailView" class="panel hidden detail-view" aria-live="polite">
-          <button id="backBtn" class="btn ghost" type="button">Retour au feed</button>
+          <button id="backBtn" class="btn ghost" type="button">Back to feed</button>
           <p id="detailMeta" class="meta"></p>
           <h2 id="detailTitle"></h2>
           <div id="detailTags" class="chips"></div>
           <div id="detailBody" class="detail-body">
-            <img id="detailImage" class="detail-image hidden" alt="Illustration du post" />
+            <img id="detailImage" class="detail-image hidden" alt="Post illustration" />
             <div id="detailContent" class="rich-content"></div>
           </div>
           <div class="detail-actions">
-            <button id="shareBtn" class="btn primary" type="button">Partager</button>
-            <a id="sourceLink" class="btn ghost hidden" target="_blank" rel="noreferrer">Source</a>
+            <button id="shareBtn" class="btn primary" type="button">Share post</button>
+            <a id="sourceLink" class="btn ghost hidden" target="_blank" rel="noreferrer">Open source</a>
           </div>
+
+          <section id="commentsSection" class="comments-panel">
+            <h3>Anonymous Comments</h3>
+            <p class="meta">Anyone can comment here anonymously from their browser.</p>
+            <div id="commentsList" class="comments-list"></div>
+            <form id="commentForm" class="comment-form">
+              <input id="commentName" type="text" maxlength="40" placeholder="Name (optional, default: Anonymous)" />
+              <textarea id="commentText" maxlength="1200" placeholder="Write your comment..." required></textarea>
+              <button class="btn primary" type="submit">Post comment</button>
+            </form>
+          </section>
         </article>
       </section>
     </main>
 
     <footer class="site-footer">
       <p>
-        Calm Chaos Club · heberge gratuitement sur GitHub Pages · edite ton contenu dans
-        <code>assets/posts.js</code>
+        Calm Chaos Club · hosted on GitHub Pages · content lives in <code>assets/posts.js</code>
       </p>
     </footer>
 
     <script defer src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js" crossorigin="anonymous"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
-    <script defer src="./assets/posts.js?v=20260327-1"></script>
-    <script defer src="./assets/app.js?v=20260327-1"></script>
+    <script defer src="./assets/posts.js?v=20260327-2"></script>
+    <script defer src="./assets/app.js?v=20260327-2"></script>
   </body>
 </html>
