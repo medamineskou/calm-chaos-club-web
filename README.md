@@ -2,8 +2,7 @@
 
 Site statique (gratuit sur GitHub Pages) en style feed social.
 
-## Ajouter un post
-
+## Pour poster ( ;) )
 1. Ouvre `assets/posts.js`.
 2. Duplique un objet dans `window.POSTS`.
 3. Champs utiles:
