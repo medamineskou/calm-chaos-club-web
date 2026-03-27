@@ -141,11 +141,27 @@ function renderMath(retries = 8) {
     delimiters: [
       { left: "$$", right: "$$", display: true },
       { left: "\\[", right: "\\]", display: true },
-      { left: "\\(", right: "\\)", display: false },
-      { left: "$", right: "$", display: false }
+      { left: "\\(", right: "\\)", display: false }
     ],
     throwOnError: false
   });
+}
+
+function normalizeInlineMath(markdown) {
+  // Avoid delimiter conflicts by converting single-dollar inline math to \( ... \),
+  // while preserving block math in $$ ... $$ untouched.
+  const blocks = [];
+  const protectedMarkdown = markdown.replace(/\$\$[\s\S]*?\$\$/g, (m) => {
+    const key = `@@MATH_BLOCK_${blocks.length}@@`;
+    blocks.push(m);
+    return key;
+  });
+
+  const converted = protectedMarkdown.replace(/(^|[^$])\$([^\n$]+?)\$/g, (full, prefix, expr) => {
+    return `${prefix}\\(${expr.trim()}\\)`;
+  });
+
+  return converted.replace(/@@MATH_BLOCK_(\d+)@@/g, (_, idx) => blocks[Number(idx)]);
 }
 
 function openPost(slug, pushHash) {
@@ -157,7 +173,8 @@ function openPost(slug, pushHash) {
   el.detailMeta.textContent = `${post.type} - ${formatDate(post.date)}`;
   el.detailTitle.textContent = post.title;
   el.detailTags.innerHTML = post.tags.map((tag) => `<span class="chip">${tag}</span>`).join("");
-  el.detailContent.innerHTML = window.marked.parse(post.content);
+  const normalizedContent = normalizeInlineMath(post.content);
+  el.detailContent.innerHTML = window.marked.parse(normalizedContent);
   el.detailContent.setAttribute("lang", post.lang || "fr");
   el.detailContent.setAttribute("dir", post.dir || "ltr");
 
