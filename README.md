@@ -1,4 +1,4 @@
-# Site perso luxe (GitHub Pages)
+# Neon Drift (GitHub Pages)
 
 Ce projet est un site statique, ideal pour un hebergement gratuit sur GitHub Pages.
 
