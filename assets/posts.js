@@ -1,60 +1,103 @@
 window.POSTS = [
   {
-    slug: "vision-2026",
-    title: "Vision 2026: ce que je veux construire",
-    type: "Idee",
-    tags: ["strategie", "carriere", "journal"],
-    date: "2026-03-27",
-    excerpt:
-      "Ma direction perso sur 12 mois: expertise technique, impact business et discipline creative.",
-    sourceUrl: "",
-    content: `
-## Pourquoi ce journal
-Je veux un espace personnel pour documenter mes idees et les transformer en execution.
-
-## Cap principal
-- Approfondir la data science appliquee a l'assurance.
-- Publier des notes utiles, pas juste des pensees.
-- Construire des produits qui ont une vraie utilite.
-
-> Regle perso: "Une idee par semaine doit devenir un livrable partageable."
-`
-  },
-  {
-    slug: "note-math-var",
-    title: "Note mathematique: VaR simplifiee",
+    slug: "mle-reg-lineaire-rss-ridge",
+    title: "Pourquoi le MLE en regression lineaire revient a minimiser la somme des residus au carre",
     type: "Math",
-    tags: ["math", "risk", "finance"],
-    date: "2026-03-26",
+    tags: ["math", "stats", "machine-learning", "ridge"],
+    date: "2026-03-27",
+    image:
+      "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=1200&q=80",
+    sourceUrl: "https://en.wikipedia.org/wiki/Ridge_regression",
     excerpt:
-      "Petit rappel sur la Value-at-Risk avec une hypothese gaussienne.",
-    sourceUrl: "",
+      "Sous bruit gaussien, maximiser la log-vraisemblance revient a minimiser RSS. Et Ridge est equivalent a MAP gaussien, Tikhonov et une contrainte L2.",
     content: `
-Pour un portefeuille de rendement \(R\\sim\\mathcal{N}(\\mu,\\sigma^2)\), une approximation de la VaR au niveau \\(\\alpha\\) est:
+> Point important: ce n'est pas parce que la loss est lineaire. C'est parce que le bruit est **gaussien**, ce qui donne une penalite **quadratique**.
 
-$$
-\\mathrm{VaR}_{\\alpha} = -\\left(\\mu + \\sigma\\Phi^{-1}(1-\\alpha)\\right).
-$$
+On part du modele
+\\[
+y = X\\beta + \\varepsilon,\\quad \\varepsilon \\sim \\mathcal N(0,\\sigma^2 I).
+\\]
 
-Avec \\(\\alpha=95\\%\\), \\(\\Phi^{-1}(0.05)\\approx -1.645\\).
+La log-vraisemblance (a constante pres) est:
+\\[
+\\ell(\\beta,\\sigma^2) = -\\frac{n}{2}\\log(\\sigma^2) - \\frac{1}{2\\sigma^2}\\|y-X\\beta\\|_2^2.
+\\]
+
+Si \\(\\sigma^2\\) est fixe, maximiser \\(\\ell\\) en \\(\\beta\\) est exactement equivalent a:
+\\[
+\\min_\\beta \\|y - X\\beta\\|_2^2
+\\]
+donc a minimiser \\(\\sum_i (y_i-\\hat y_i)^2\\), la RSS.
+
+## Ridge: equivalent a quoi ?
+
+Ridge:
+\\[
+\\min_\\beta \\|y-X\\beta\\|_2^2 + \\lambda\\|\\beta\\|_2^2
+\\]
+est equivalent a:
+
+1. **Contrainte L2**: \\(\\min \\|y-X\\beta\\|_2^2\\) s.c. \\(\\|\\beta\\|_2^2 \\le t\\)
+2. **MAP bayesien** avec prior gaussien \\(\\beta\\sim\\mathcal N(0,\\tau^2I)\\), avec \\(\\lambda=\\sigma^2/\\tau^2\\)
+3. **Regularisation de Tikhonov**
+4. **OLS sur donnees augmentees**:
+\\[
+\\tilde X=
+\\begin{bmatrix}
+X\\\\
+\\sqrt{\\lambda}I
+\\end{bmatrix},
+\\quad
+\\tilde y=
+\\begin{bmatrix}
+y\\\\
+0
+\\end{bmatrix}
+\\]
+et on fait simplement OLS sur \\((\\tilde X,\\tilde y)\\).
+
+Ce sont les memes solutions, juste des interpretations differentes.
 `
   },
   {
-    slug: "lecture-climat",
-    title: "Lecture utile: climat et sinistres",
-    type: "Lien",
-    tags: ["climat", "lecture", "assurance"],
-    date: "2026-03-25",
+    slug: "notes-philo-action",
+    title: "Philo rapide: clarte > motivation",
+    type: "Philo",
+    tags: ["philo", "thoughts", "discipline"],
+    date: "2026-03-26",
+    image:
+      "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1200&q=80",
+    sourceUrl: "",
     excerpt:
-      "Un papier interessant sur la modelisation des sinistres lies aux evenements meteo.",
-    sourceUrl:
-      "https://www.cambridge.org/core/journals/annals-of-actuarial-science",
+      "Je n'ai pas besoin d'etre motive tous les jours. J'ai besoin d'un systeme simple que je respecte.",
     content: `
-J'ai compile ici mes lectures de reference.
+Je veux prioriser les systemes plutot que l'inspiration.
 
-- Angle 1: modelisation statistique des evenements extremes.
-- Angle 2: impact business sur la tarification.
-- Angle 3: robustesse et communication du modele.
+- 1 objectif clair par semaine
+- 3 blocs de travail profonds
+- 1 livrable publiable
+
+Le calme vient de la clarte.
+`
+  },
+  {
+    slug: "post-arabe-test",
+    title: "تجربة دعم اللغة العربية",
+    type: "Thoughts",
+    tags: ["arabic", "test", "culture"],
+    date: "2026-03-24",
+    image:
+      "https://images.unsplash.com/photo-1524499982521-1ffd58dd89ea?auto=format&fit=crop&w=1200&q=80",
+    sourceUrl: "",
+    lang: "ar",
+    dir: "rtl",
+    excerpt: "هذا اختبار بسيط للتأكد من عرض النص العربي بشكل صحيح داخل الموقع.",
+    content: `
+هذا مثال لنص عربي داخل المنصة.
+
+- يمكن الكتابة من اليمين إلى اليسار
+- يمكن إضافة روابط وصور ومقالات
+- ويمكن كذلك مشاركة رابط كل منشور بسهولة
 `
   }
 ];

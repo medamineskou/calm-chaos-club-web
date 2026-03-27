@@ -3,15 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Neon Drift - Journal de Mohammed</title>
+    <title>Calm Chaos Club</title>
     <meta
       name="description"
-      content="Blog personnel premium pour partager idees, photos, articles, liens et notes mathematiques."
+      content="Calm Chaos Club: espace perso pour partager idees, philo, math, culture, sport, photos et articles."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <link
@@ -21,51 +21,68 @@
     />
     <link rel="stylesheet" href="./assets/style.css" />
   </head>
-  <body>
-    <div class="ambient ambient-top"></div>
-    <div class="ambient ambient-bottom"></div>
-    <header class="site-header">
-      <div class="brand">
-        <p class="brand-mark">Neon Drift</p>
-        <h1>Journal de Mohammed</h1>
-      </div>
-      <a class="header-share" href="https://github.com/medamineskou" target="_blank" rel="noreferrer">GitHub</a>
-    </header>
-    <main class="layout">
-      <aside class="panel filters-panel">
-        <h2>Explorer</h2>
-        <label class="field-label" for="searchInput">Recherche rapide</label>
-        <input id="searchInput" class="search-input" type="search" placeholder="Titre, tags, contenu..." />
-        <p class="field-label">Type de contenu</p>
-        <div id="typeFilters" class="chips"></div>
-        <p class="field-label">Tags</p>
-        <div id="tagFilters" class="chips"></div>
-        <button id="clearFiltersBtn" class="ghost-btn" type="button">Reinitialiser</button>
-      </aside>
-      <section class="panel content-panel">
-        <div id="listView">
-          <div class="section-top">
-            <h2>Mes partages</h2>
-            <p id="resultsMeta" class="meta-text"></p>
-          </div>
-          <div id="cardsContainer" class="cards-grid"></div>
+  <body data-theme="light">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand-wrap">
+          <p class="brand-mini">Calm Chaos Club</p>
+          <h1>Un feed pour penser, partager, archiver.</h1>
         </div>
-        <article id="detailView" class="detail-view hidden" aria-live="polite">
-          <button id="backBtn" class="ghost-btn back-btn" type="button">Retour aux partages</button>
-          <p id="detailMeta" class="meta-text"></p>
+        <div class="topbar-actions">
+          <button id="themeToggle" class="btn ghost" type="button">Mode nuit</button>
+          <a class="btn ghost" href="https://github.com/medamineskou/neon-drift" target="_blank" rel="noreferrer"
+            >Repo</a
+          >
+        </div>
+      </div>
+    </header>
+
+    <main class="page">
+      <aside class="sidebar">
+        <section class="panel">
+          <h2>Explorer</h2>
+          <input id="searchInput" type="search" placeholder="Rechercher dans les posts..." />
+          <p class="label">Type</p>
+          <div id="typeFilters" class="chips"></div>
+          <p class="label">Tags</p>
+          <div id="tagFilters" class="chips"></div>
+          <button id="clearFiltersBtn" class="btn ghost full" type="button">Reinitialiser les filtres</button>
+        </section>
+      </aside>
+
+      <section class="feed-area">
+        <section id="listView" class="panel">
+          <div class="feed-head">
+            <h2>Fil des partages</h2>
+            <p id="resultsMeta"></p>
+          </div>
+          <div id="cardsContainer" class="feed-list"></div>
+        </section>
+
+        <article id="detailView" class="panel hidden detail-view" aria-live="polite">
+          <button id="backBtn" class="btn ghost" type="button">Retour au feed</button>
+          <p id="detailMeta" class="meta"></p>
           <h2 id="detailTitle"></h2>
           <div id="detailTags" class="chips"></div>
-          <div id="detailContent" class="rich-content"></div>
+          <div id="detailBody" class="detail-body">
+            <img id="detailImage" class="detail-image hidden" alt="Illustration du post" />
+            <div id="detailContent" class="rich-content"></div>
+          </div>
           <div class="detail-actions">
-            <button id="shareBtn" class="gold-btn" type="button">Partager cet article</button>
-            <a id="sourceLink" class="ghost-btn hidden" target="_blank" rel="noreferrer">Ouvrir la source</a>
+            <button id="shareBtn" class="btn primary" type="button">Partager</button>
+            <a id="sourceLink" class="btn ghost hidden" target="_blank" rel="noreferrer">Source</a>
           </div>
         </article>
       </section>
     </main>
+
     <footer class="site-footer">
-      <p>Heberge gratuitement sur GitHub Pages. Mise a jour en modifiant <code>assets/posts.js</code>.</p>
+      <p>
+        Calm Chaos Club · heberge gratuitement sur GitHub Pages · edite ton contenu dans
+        <code>assets/posts.js</code>
+      </p>
     </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js" crossorigin="anonymous"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>

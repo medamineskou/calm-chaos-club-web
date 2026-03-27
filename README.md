@@ -1,20 +1,19 @@
-# Neon Drift (GitHub Pages)
+# Calm Chaos Club (GitHub Pages)
 
-Ce projet est un site statique, ideal pour un hebergement gratuit sur GitHub Pages.
+Site statique (gratuit sur GitHub Pages) en style feed social.
 
-## Ajouter un partage
+## Ajouter un post
 
 1. Ouvre `assets/posts.js`.
 2. Duplique un objet dans `window.POSTS`.
-3. Change:
-   - `slug`: identifiant unique (ex: `idee-modele-climat`)
-   - `title`, `excerpt`, `type`, `tags`, `date`
-   - `content` en Markdown
-4. Commit + push.
+3. Champs utiles:
+   - `slug`, `title`, `type`, `tags`, `date`, `excerpt`
+   - `image` (affiche image a gauche dans le feed)
+   - `content` (Markdown + formules KaTeX)
+   - `sourceUrl` (optionnel)
+   - `lang` et `dir` pour arabe (ex: `lang: "ar"`, `dir: "rtl"`)
 
-## Math
-
-Tu peux ecrire des formules:
+## Formules
 
 - Inline: `\\(a^2+b^2=c^2\\)`
 - Bloc:
@@ -22,10 +21,8 @@ Tu peux ecrire des formules:
   E[X]=\\int x f(x) dx
   $$`
 
-## Types conseilles
+## Theme
 
-- `Idee`
-- `Photo`
-- `Article`
-- `Lien`
-- `Math`
+- Clair par defaut
+- Toggle `Mode nuit` en haut a droite
+- Preference sauvegardee localement
