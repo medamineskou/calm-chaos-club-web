@@ -129,16 +129,22 @@ function formatDate(value) {
   });
 }
 
-function renderMath() {
-  if (window.renderMathInElement) {
-    window.renderMathInElement(el.detailContent, {
-      delimiters: [
-        { left: "$$", right: "$$", display: true },
-        { left: "\\(", right: "\\)", display: false }
-      ],
-      throwOnError: false
-    });
+function renderMath(retries = 8) {
+  if (!window.renderMathInElement) {
+    if (retries > 0) {
+      window.setTimeout(() => renderMath(retries - 1), 120);
+    }
+    return;
   }
+
+  window.renderMathInElement(el.detailContent, {
+    delimiters: [
+      { left: "$$", right: "$$", display: true },
+      { left: "\\[", right: "\\]", display: true },
+      { left: "\\(", right: "\\)", display: false }
+    ],
+    throwOnError: false
+  });
 }
 
 function openPost(slug, pushHash) {
