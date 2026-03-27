@@ -173,8 +173,12 @@ function openPost(slug, pushHash) {
   el.detailMeta.textContent = `${post.type} - ${formatDate(post.date)}`;
   el.detailTitle.textContent = post.title;
   el.detailTags.innerHTML = post.tags.map((tag) => `<span class="chip">${tag}</span>`).join("");
-  const normalizedContent = normalizeInlineMath(post.content);
-  el.detailContent.innerHTML = window.marked.parse(normalizedContent);
+  if (post.rawHtml) {
+    el.detailContent.innerHTML = post.content;
+  } else {
+    const normalizedContent = normalizeInlineMath(post.content);
+    el.detailContent.innerHTML = window.marked.parse(normalizedContent);
+  }
   el.detailContent.setAttribute("lang", post.lang || "fr");
   el.detailContent.setAttribute("dir", post.dir || "ltr");
 
