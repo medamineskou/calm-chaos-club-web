@@ -94,7 +94,7 @@ function postCard(post) {
   node.innerHTML = `
     <img class="feed-image" src="${safeImage}" alt="Image du post ${post.title}" loading="lazy" />
     <div class="feed-content">
-      <p class="feed-meta">${post.type} • ${formatDate(post.date)}</p>
+      <p class="feed-meta">${post.type} - ${formatDate(post.date)}</p>
       <h3>${post.title}</h3>
       <p>${post.excerpt}</p>
       <div class="chips">${post.tags.map((tag) => `<span class="chip">${tag}</span>`).join("")}</div>
@@ -141,7 +141,8 @@ function renderMath(retries = 8) {
     delimiters: [
       { left: "$$", right: "$$", display: true },
       { left: "\\[", right: "\\]", display: true },
-      { left: "\\(", right: "\\)", display: false }
+      { left: "\\(", right: "\\)", display: false },
+      { left: "$", right: "$", display: false }
     ],
     throwOnError: false
   });
@@ -153,7 +154,7 @@ function openPost(slug, pushHash) {
 
   el.listView.classList.add("hidden");
   el.detailView.classList.remove("hidden");
-  el.detailMeta.textContent = `${post.type} • ${formatDate(post.date)}`;
+  el.detailMeta.textContent = `${post.type} - ${formatDate(post.date)}`;
   el.detailTitle.textContent = post.title;
   el.detailTags.innerHTML = post.tags.map((tag) => `<span class="chip">${tag}</span>`).join("");
   el.detailContent.innerHTML = window.marked.parse(post.content);
